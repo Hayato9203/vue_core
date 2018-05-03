@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+  <input type="text" id="userName">
+  <br>
+  <span id="uName"></span>
+  <script>
+    var obj = {
+      pwd: '12345'
+    }
+    Object.defineProperty(obj, "userName", {
+      get: function () {
+        console.log('get init')
+      },
+      set: function (val) {
+        console.log('set init')
+        document.getElementById("uName").innerText = val
+        document.getElementById("userName").value = val
+      }
+    })
+    // 监听键盘弹起时间(输入放开)
+    document.getElementById("userName").addEventListener("keyup", function (event) {
+      obj.userName = event.target.value
+    })
+  </script>
+</body>
+
+</html>
