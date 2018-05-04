@@ -17,6 +17,7 @@
     <h1>Vue-Resource插件详解</h1>
     <a href="javascript:;" class="btn btn-primary" @click="get">Get 请求</a>
     <a href="javascript:;" class="btn btn-primary" @click="post">Post 请求</a>
+    <a href="javascript:;" class="btn btn-primary" @click="get_cross">测试跨域 Get 请求</a>
     <a href="javascript:;" class="btn btn-primary" @click="jsonp">JSONP 请求</a>
     <div>{{msg}}</div>
   </div>
@@ -31,33 +32,53 @@
         get() {
           // this.$http代表vue-resource本身
           this.$http.get('./test.json', {
-            params: {
-              id: 3
-            },
-            headers: {
-              token: '32144'
-            }
-          }).then(res => {
-            this.msg = res.data
-          }, err => {
-            this.msg = err
-          })
+              params: {
+                id: 3
+              },
+              headers: {
+                token: '32144'
+              }
+            }).then(res => {
+              this.msg = res.data
+            }, err => {
+              this.msg = err
+            })
             .catch(err => console.log(err))
         },
         post() {
           this.$http.post('./test.json', {
             userId: '111'
           }, {
-              headers: {
-                access_token: 'ggg'
-              }
-            }).then(res => {
+            headers: {
+              access_token: 'ggg'
+            }
+          }).then(res => {
+            this.msg = res.data
+          }, err => {
+            this.msg = err.data
+          }).catch(err => console.log(err))
+        },
+        get_cross() {
+          this.$http.get(
+              'https://www.imooc.com/static/sea-modules/seajs/seajs-text/1.0.3/seajs-text.js?v=201804241504')
+            .then(res => {
               this.msg = res.data
             }, err => {
               this.msg = err
-            }).catch(err => console.log(err))
+            })
+            .catch(err => console.log(err))
         },
-        jsonp() { },
+        // jsonp跨域请求,模拟script标签发送带有callback参数的GET请求
+        // 服务器返回的json数据将被传入回调函数中处理
+        jsonp() {
+          this.$http.jsonp(
+              'https://www.imooc.com/static/sea-modules/seajs/seajs-text/1.0.3/seajs-text.js?v=201804241504')
+            .then(res => {
+              this.msg = res.data
+            }, err => {
+              this.msg = err.data
+            }).catch(err => console.log(err))
+        }
       }
     })
   </script>
