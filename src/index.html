@@ -19,16 +19,16 @@
     <a href="javascript:;" class="btn btn-primary" @click="post">Post 请求</a>
     <a href="javascript:;" class="btn btn-primary" @click="get_cross">测试跨域 Get 请求</a>
     <a href="javascript:;" class="btn btn-primary" @click="jsonp">JSONP 请求</a>
+    <a href="javascript:;" class="btn btn-primary" @click="http">HTTP 请求</a>
     <div>{{msg}}</div>
   </div>
   <script>
-    // vue-resource已经主动挂载到Vue了
     new Vue({
       el: '#app',
       data: {
         msg: ''
       },
-      mounted: function() {
+      mounted: function () {
         // 中间件http拦截器,可以监听http请求的生命周期
         Vue.http.interceptors.push((req, next) => {
           // 请求响应,这里可以做错误请求的拦截处理
@@ -40,10 +40,13 @@
           })
         })
       },
+      // 配置所有http请求的baseUrl,这里是演示,jsonp中要修改
+      http:{
+        root: 'http://127.0.0.1/8000'
+      },
       methods: {
         get() {
-          // this.$http代表vue-resource本身
-          this.$http.get('./test.json', {
+          this.$http.get('/test.json', {
               params: {
                 id: 3
               },
@@ -58,7 +61,7 @@
             .catch(err => console.log(err))
         },
         post() {
-          this.$http.post('./test.json', {
+          this.$http.post('/test.json', {
             userId: '111'
           }, {
             headers: {
@@ -72,7 +75,7 @@
         },
         get_cross() {
           this.$http.get(
-              'https://www.imooc.com/static/sea-modules/seajs/seajs-text/1.0.3/seajs-text.js?v=201804241504')
+              'https://www.baidu.com/')
             .then(res => {
               this.msg = res.data
             }, err => {
@@ -80,16 +83,32 @@
             })
             .catch(err => console.log(err))
         },
-        // jsonp跨域请求,模拟script标签发送带有callback参数的GET请求
-        // 服务器返回的json数据将被传入回调函数中处理
         jsonp() {
           this.$http.jsonp(
-              'https://www.imooc.com/static/sea-modules/seajs/seajs-text/1.0.3/seajs-text.js?v=201804241504')
+              'https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superui/js/ubase_d1f77074.js')
             .then(res => {
               this.msg = res.data
             }, err => {
               this.msg = err.data
             }).catch(err => console.log(err))
+        },
+        // 通过配置方式options
+        http() {
+          this.$http({
+              url: '/test.json',
+              method: 'GET',
+              params: {
+                userId: '5902'
+              },
+              headers: {
+                token: '5434'
+              },
+              timeout: 10,
+              before: () => {
+                console.log(`before init.`)
+              }
+            }).then(res => this.msg = res.data)
+            .catch(err => this.msg = err)
         }
       }
     })
