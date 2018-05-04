@@ -28,6 +28,18 @@
       data: {
         msg: ''
       },
+      mounted: function() {
+        // 中间件http拦截器,可以监听http请求的生命周期
+        Vue.http.interceptors.push((req, next) => {
+          // 请求响应,这里可以做错误请求的拦截处理
+          console.log(`request init.`)
+          next(res => {
+            // 返回响应
+            console.log(`response init.`)
+            return res
+          })
+        })
+      },
       methods: {
         get() {
           // this.$http代表vue-resource本身
