@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="../node_modules/vue/dist/vue.js"></script>
+  <script src="../node_modules/axios/dist/axios.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
+    crossorigin="anonymous">
+  <title>axios</title>
+</head>
+
+<body>
+  <div id="app" class="container">
+    <h1>axios插件详解</h1>
+    <a href="javascript:;" class="btn btn-primary" @click="get">Get 请求</a>
+    <a href="javascript:;" class="btn btn-primary" @click="post">Post 请求</a>
+    <a href="javascript:;" class="btn btn-primary" @click="http">http 请求</a>
+    <div>{{msg}}</div>
+  </div>
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        msg: ''
+      },
+      // axios的http请求中间件拦截器
+      mounted: function () {
+        // 请求之前可用作loading处理
+        axios.interceptors.request.use(config => {
+          console.log(`request init.`)
+          return config
+        })
+        // 用作响应请求之前的处理
+        axios.interceptors.response.use(res => {
+          console.log(`response init.`)
+          return res
+        })
+      },
+      methods: {
+        get() {
+          axios.get('./test.json', {
+            params: {
+              userId: '999'
+            },
+            headers: {
+              token: 'fheiwr99999'
+            }
+          }).then(res => {
+            this.msg = res.data
+          }).catch(err => console.log(err))
+        },
+        post() {
+          axios.post('./test.json', {
+            userId: 'u8r9'
+          }, {
+            headers: {
+              token: 'hayato'
+            }
+          }).then(res => {
+            this.msg = res.data
+          }).catch(err => console.log(err))
+        },
+        http() {
+          axios({
+            url: './test.json',
+            method: 'get',
+            // post请求
+            data: {
+              userId: '4u39'
+            },
+            // get请求
+            params: {
+              userId: '8932'
+            },
+            headers: {
+              token: 'http-test'
+            }
+          }).then(res => {
+            this.msg = res.data
+          }).catch(err => console.log(err))
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>
