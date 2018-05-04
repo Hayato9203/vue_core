@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="../node_modules/vue/dist/vue.js"></script>
+  <script src="../node_modules/vue-resource/dist/vue-resource.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
+    crossorigin="anonymous">
+  <title>Vue-Resource</title>
+</head>
+
+<body>
+  <div id="app" class="container">
+    <h1>Vue-Resource插件详解</h1>
+    <a href="javascript:;" class="btn btn-primary" @click="get">Get 请求</a>
+    <a href="javascript:;" class="btn btn-primary" @click="post">Post 请求</a>
+    <a href="javascript:;" class="btn btn-primary" @click="jsonp">JSONP 请求</a>
+    <div>{{msg}}</div>
+  </div>
+  <script>
+    // vue-resource已经主动挂载到Vue了
+    new Vue({
+      el: '#app',
+      data: {
+        msg: ''
+      },
+      methods: {
+        get() {
+          // this.$http代表vue-resource本身
+          this.$http.get('../package.json', {
+              params: {
+                id: 3
+              },
+              headers: {
+                token: '32144'
+              }
+            }).then(res => {
+              this.msg = res.data
+            }, err => {
+              this.msg = err
+            })
+            .catch(err => console.log(err))
+        },
+        post() {
+          this.$http.post('../package.json', {
+            userId: '111'
+          }, {
+            headers: {
+              access_token: 'ggg'
+            }
+          }).then(res => {
+            this.msg = res.data
+          }, err => {
+            this.msg = err
+          }).catch(err => console.log(err))
+        },
+        jsonp() {},
+      }
+    })
+  </script>
+</body>
+
+</html>
